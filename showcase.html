@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DubPilot — Multimodal Cinema Monograph & Architecture (Alexa+ & AWS Bedrock)</title>
+  <meta name="description" content="DubPilot: Multimodal Alexa+ Video Localization Copilot & AWS Bedrock Cinema Engine. Architectural Monograph Edition.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-ink-black: #0d0e13;
+      --color-pure-white: #ffffff;
+      --color-canvas-beige: #e4e0db;
+      --color-steel-gray: #6e6e71;
+      --color-footer-ink: #070707;
+      --color-sand-border: #e0ccbb;
+      --color-warm-linen: #e6d7ca;
+      --alexa-blue: #00caec;
+      --violet-primary: #7248ea;
+
+      --font-lausanne: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-times: 'Newsreader', 'Times New Roman', Times, serif;
+
+      --text-body-sm: 14px;
+      --leading-body-sm: 1.88;
+      --tracking-body-sm: 0.007em;
+      --text-body: 16px;
+      --leading-body: 1.5;
+      --tracking-body: 0.006em;
+      --text-subheading: 24px;
+      --leading-subheading: 1.33;
+      --tracking-subheading: -0.035em;
+      --text-heading-lg: clamp(48px, 9vw, 144px);
+      --leading-heading-lg: 0.76;
+      --tracking-heading-lg: -0.035em;
+      --text-display: clamp(64px, 15vw, 250px);
+      --leading-display: 0.76;
+      --tracking-display: -0.046em;
+
+      --spacing-200: 200px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      font-weight: 400;
+    }
+
+    body {
+      font-family: var(--font-lausanne);
+      background-color: var(--color-canvas-beige);
+      color: var(--color-ink-black);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "ss01" on, "tnum" on;
+      overflow-x: hidden;
+    }
+
+    .exo-nav {
+      position: relative;
+      z-index: 50;
+      width: 100%;
+      background-color: var(--color-pure-white);
+      padding: 48px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .exo-nav {
+        padding: 24px 20px;
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+
+    .exo-nav-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 15px;
+    }
+
+    .exo-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--color-ink-black);
+      text-decoration: none;
+    }
+
+    .exo-brand-tag {
+      font-size: 14px;
+      color: var(--color-steel-gray);
+    }
+
+    .exo-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .exo-nav-link {
+      font-size: 14px;
+      line-height: 1.88;
+      color: var(--color-ink-black);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+
+    .exo-nav-link:hover {
+      color: var(--color-steel-gray);
+    }
+
+    .exo-nav-link.studio-link {
+      border-bottom: 1px solid var(--color-sand-border);
+      padding-bottom: 2px;
+    }
+
+    .exo-hero {
+      position: relative;
+      width: 100%;
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: #0d0e13;
+      overflow: hidden;
+    }
+
+    .exo-hero-img-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .exo-hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.04) brightness(0.92);
+      display: block;
+    }
+
+    .exo-hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(13, 14, 19, 0.25) 0%,
+        rgba(13, 14, 19, 0.1) 50%,
+        rgba(13, 14, 19, 0.75) 100%
+      );
+      z-index: 2;
+    }
+
+    .exo-hero-content {
+      position: relative;
+      z-index: 5;
+      padding: 0 60px 80px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    @media (max-width: 1024px) {
+      .exo-hero-content {
+        padding: 0 30px 50px 30px;
+      }
+    }
+
+    .exo-hero-eyebrow {
+      font-size: 14px;
+      line-height: 1.88;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .exo-hero-display {
+      font-size: var(--text-display);
+      line-height: var(--leading-display);
+      letter-spacing: var(--tracking-display);
+      color: var(--color-pure-white);
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    .exo-hero-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      padding-top: 22px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      line-height: 1.88;
+    }
+
+    .exo-action-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--color-ink-black);
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid var(--color-warm-linen);
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: border-color 150ms ease;
+    }
+
+    .exo-action-link:hover {
+      border-color: var(--color-ink-black);
+    }
+
+    .exo-action-link.dark-variant {
+      color: var(--color-pure-white);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .exo-action-link.dark-variant:hover {
+      border-color: var(--color-pure-white);
+    }
+
+    .exo-section {
+      padding: var(--spacing-200) 120px;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .exo-section {
+        padding: 100px 30px;
+      }
+    }
+
+    .exo-section.canvas-bg {
+      background-color: var(--color-canvas-beige);
+    }
+
+    .exo-section.white-bg {
+      background-color: var(--color-pure-white);
+    }
+
+    .exo-section.sand-tint {
+      background-color: #ebdcd0;
+    }
+
+    .exo-headline-lg {
+      font-size: var(--text-heading-lg);
+      line-height: var(--leading-heading-lg);
+      letter-spacing: var(--tracking-heading-lg);
+      color: var(--color-ink-black);
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      word-break: break-word;
+    }
+
+    .exo-grid-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 67px;
+    }
+
+    @media (max-width: 900px) {
+      .exo-grid-two-col {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    .exo-prose-column {
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .exo-body-lead {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--color-ink-black);
+    }
+
+    .exo-body-secondary {
+      font-size: 14px;
+      line-height: 1.88;
+      color: var(--color-steel-gray);
+    }
+
+    .exo-body-serif {
+      font-family: var(--font-times);
+      font-size: 16px;
+      line-height: 1.85;
+      font-style: italic;
+      border-left: 1px solid var(--color-sand-border);
+      padding-left: 22px;
+    }
+
+    .exo-cards-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 67px;
+    }
+
+    @media (max-width: 900px) {
+      .exo-cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .exo-image-card {
+      background-color: var(--color-pure-white);
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .exo-card-media {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background-color: #d8d3cc;
+    }
+
+    .exo-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .exo-card-num-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--color-sand-border);
+      padding-bottom: 13px;
+    }
+
+    .exo-card-title {
+      font-size: 24px;
+      line-height: 1.33;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+    }
+
+    .exo-list-table {
+      width: 100%;
+      border-top: 1px solid var(--color-sand-border);
+      margin-top: 50px;
+    }
+
+    .exo-list-row {
+      display: grid;
+      grid-template-columns: 80px 2fr 1.5fr 1fr 140px;
+      align-items: baseline;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--color-sand-border);
+      text-decoration: none;
+      color: var(--color-ink-black);
+    }
+
+    .exo-list-row:hover {
+      background-color: rgba(230, 215, 202, 0.25);
+    }
+
+    .exo-palette-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .exo-swatch-box {
+      width: 100%;
+      height: 60px;
+      border: 1px solid var(--color-sand-border);
+    }
+
+    .exo-footer {
+      background-color: var(--color-footer-ink);
+      color: var(--color-pure-white);
+      padding: var(--spacing-200) 120px 80px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 67px;
+    }
+
+    @media (max-width: 1024px) {
+      .exo-footer {
+        padding: 100px 30px 50px 30px;
+      }
+    }
+
+    .exo-footer-main {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .exo-footer-main {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    .exo-footer-title {
+      font-size: clamp(32px, 5vw, 64px);
+      line-height: 0.85;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .exo-footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Top Navigation Bar -->
+  <header class="exo-nav">
+    <div class="exo-nav-brand">
+      <a href="showcase.html" class="exo-wordmark">DubPilot</a>
+      <span class="exo-brand-tag">/ Multimodal Monograph &middot; Alexa+ &amp; AWS 2026</span>
+    </div>
+    <nav>
+      <ul class="exo-nav-links">
+        <li><a href="#acoustics" class="exo-nav-link">Acoustics</a></li>
+        <li><a href="#studies" class="exo-nav-link">Studies</a></li>
+        <li><a href="#manifest" class="exo-nav-link">Audio Index</a></li>
+        <li><a href="#tokens" class="exo-nav-link">Tokens</a></li>
+        <li><a href="index.html" class="exo-nav-link studio-link">Launch Cinema Studio &rarr;</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 2. Full-Bleed Hero Section -->
+  <section class="exo-hero">
+    <div class="exo-hero-img-wrap">
+      <img src="public/images/dubpilot/dubpilot_hero.jpg" alt="Brutalist cinema screening hall with projection light beam" class="exo-hero-img">
+    </div>
+    <div class="exo-hero-overlay"></div>
+    <div class="exo-hero-content">
+      <span class="exo-hero-eyebrow">Amazon Developer Hackathon 2026 &middot; Alexa+ Track</span>
+      <h1 class="exo-hero-display">DUBPILOT</h1>
+      <div class="exo-hero-meta">
+        <div>Conversational Cinema. Boundless Language. &middot; AWS Bedrock Intelligence</div>
+        <div>Printed in Digital Ink &mdash; Single-Weight 400 Typography &amp; Warm Neutrals</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Editorial Monograph Section -->
+  <section class="exo-section canvas-bg" id="acoustics">
+    <h2 class="exo-headline-lg">Acoustics of<br>Voice &amp; Script</h2>
+    <div class="exo-grid-two-col">
+      <div class="exo-prose-column">
+        <p class="exo-body-lead">
+          DubPilot eliminates the split-attention deficit of foreign cinema. Where traditional viewing forces audiences to spend 60% of screen time reading captions at the bottom of the frame, DubPilot gives viewers a natural voice-driven conversational viewing partner built for Amazon Alexa+ and Amazon Bedrock.
+        </p>
+        <p class="exo-body-secondary">
+          A single neo-grotesque weight (400) anchors everything from 14px caption running text to 250px display letterforms. The size itself is the hierarchy. Letters collide under negative tracking to form monolithic architectural presence, while body copy breathes with generous, unhurried leading.
+        </p>
+        <div style="margin-top: 20px;">
+          <a href="index.html" class="exo-action-link">Launch Interactive Studio &rarr;</a>
+        </div>
+      </div>
+      <div class="exo-prose-column">
+        <blockquote class="exo-body-serif">
+          &ldquo;Cinema is humanity&rsquo;s shared visual vessel. Spoken dialogue and cultural vernacular should enrich the story—never alienate the audience or force them to look away from the frame.&rdquo;
+        </blockquote>
+        <p class="exo-body-secondary">
+          Every vocal stem—English original, Hindi, Spanish, French—is mastered under EBU R128 loudness standards. When the user speaks, Alexa+ dispatches Bedrock tool calls in sub-120ms with smart collision prevention: telemetry updates silently during video playback, speaking only when the screen is paused.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Localization Studies / Pure White Surface Cards -->
+  <section class="exo-section white-bg" id="studies">
+    <span class="exo-hero-eyebrow" style="color: var(--color-steel-gray);">Autonomous Engineering</span>
+    <h2 class="exo-headline-lg" style="margin-top: 16px;">Localization Studies</h2>
+    <div class="exo-cards-container">
+      <article class="exo-image-card">
+        <div class="exo-card-media">
+          <img src="public/images/dubpilot/dubpilot_acoustic.jpg" alt="Acoustic stone mastering studio with mixing console" class="exo-card-img">
+        </div>
+        <div class="exo-card-meta">
+          <div class="exo-card-num-title">
+            <h3 class="exo-card-title">Acoustic Stem Alignment</h3>
+            <span class="exo-card-index">01 / 02</span>
+          </div>
+          <p class="exo-body-secondary">
+            Faster-Whisper ASR and speaker diarization separating actor dialogue from background music &amp; effects (M&amp;E). Dynamic sidechain ducking preserves natural room reverberation during translated speech.
+          </p>
+          <div>
+            <a href="index.html" class="exo-action-link">Test Audio Stems &rarr;</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="exo-image-card">
+        <div class="exo-card-media">
+          <img src="public/images/dubpilot/dubpilot_subtitles.jpg" alt="Multilingual typography glyphs on stone wall" class="exo-card-img">
+        </div>
+        <div class="exo-card-meta">
+          <div class="exo-card-num-title">
+            <h3 class="exo-card-title">Isometric Syllable Sync</h3>
+            <span class="exo-card-index">02 / 02</span>
+          </div>
+          <p class="exo-body-secondary">
+            Phonetic duration matching between source English and target Hindi/Spanish syllables ensures lip-sync naturalism. High-contrast subtitles adjust typography and bilingual modes dynamically on voice utterance.
+          </p>
+          <div>
+            <a href="index.html" class="exo-action-link">Test Subtitle HUD &rarr;</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 5. Multitrack Audio Index with Sand Dividers -->
+  <section class="exo-section canvas-bg" id="manifest">
+    <span class="exo-hero-eyebrow" style="color: var(--color-steel-gray);">Technical Manifest</span>
+    <h2 class="exo-headline-lg" style="margin-top: 16px;">Audio &amp; Agent Index</h2>
+    <div class="exo-list-table">
+      <div class="exo-list-row">
+        <span>001</span>
+        <span>English Master Stem</span>
+        <span class="exo-body-secondary">Studio Reference Dialogue &amp; M&amp;E Bus</span>
+        <span class="exo-body-secondary">1080p / 48kHz</span>
+        <span>Primary Track</span>
+      </div>
+      <div class="exo-list-row">
+        <span>002</span>
+        <span>Hindi Neural Dub (हिन्दी)</span>
+        <span class="exo-body-secondary">Isometric Syllable Sync + Neural Voice</span>
+        <span class="exo-body-secondary">EBU R128</span>
+        <span>Synchronized</span>
+      </div>
+      <div class="exo-list-row">
+        <span>003</span>
+        <span>Spanish Dub (Español)</span>
+        <span class="exo-body-secondary">Castilian Localization + Cultural Idioms</span>
+        <span class="exo-body-secondary">EBU R128</span>
+        <span>Synchronized</span>
+      </div>
+      <div class="exo-list-row">
+        <span>004</span>
+        <span>French Dub (Français)</span>
+        <span class="exo-body-secondary">Neural Lip-Matched Dialogue Bus</span>
+        <span class="exo-body-secondary">EBU R128</span>
+        <span>Synchronized</span>
+      </div>
+      <div class="exo-list-row">
+        <span>005</span>
+        <span>AWS Bedrock Agent Runtime</span>
+        <span class="exo-body-secondary">Claude 3.5 Sonnet Tool Dispatch</span>
+        <span class="exo-body-secondary">JSON Schema</span>
+        <span>Sub-120ms</span>
+      </div>
+      <div class="exo-list-row">
+        <span>006</span>
+        <span>Smart Audio Collision Guard</span>
+        <span class="exo-body-secondary">Suppresses TTS when Video Plays</span>
+        <span class="exo-body-secondary">Web Audio API</span>
+        <span>Zero Collision</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Brand Token Inspector -->
+  <section class="exo-section sand-tint" id="tokens">
+    <span class="exo-hero-eyebrow" style="color: var(--color-steel-gray);">Brand Design System (BRAND.md)</span>
+    <h2 class="exo-headline-lg" style="margin-top: 16px;">Tokens &amp; Palette</h2>
+    <div class="exo-palette-swatches">
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #e4e0db;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Canvas Beige</div>
+        <div class="exo-body-secondary">#e4e0db</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #0d0e13;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Ink Black</div>
+        <div class="exo-body-secondary">#0d0e13</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #e0ccbb;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Sand Border</div>
+        <div class="exo-body-secondary">#e0ccbb</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #e6d7ca;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Warm Linen</div>
+        <div class="exo-body-secondary">#e6d7ca</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #6e6e71;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Steel Gray</div>
+        <div class="exo-body-secondary">#6e6e71</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #070707;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Footer Ink</div>
+        <div class="exo-body-secondary">#070707</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #00caec;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Alexa Cyan</div>
+        <div class="exo-body-secondary">#00caec</div>
+      </div>
+      <div class="exo-swatch">
+        <div class="exo-swatch-box" style="background-color: #7248ea;"></div>
+        <div style="font-size: 14px; margin-top: 6px;">Bedrock Violet</div>
+        <div class="exo-body-secondary">#7248ea</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Terminal Dark Footer Block -->
+  <footer class="exo-footer">
+    <div class="exo-footer-main">
+      <div>
+        <h2 class="exo-footer-title">DubPilot</h2>
+        <p style="font-size: 14px; line-height: 1.88; color: rgba(255,255,255,0.7); max-width: 440px;">
+          Multimodal Alexa+ Video Localization Copilot &amp; AWS Bedrock Cinema Engine. Amazon Developer Hackathon 2026. Zero shadows. Zero gradients. One weight across the full scale.
+        </p>
+        <div style="margin-top: 30px;">
+          <a href="index.html" class="exo-action-link dark-variant">Enter Multimodal Cinema Studio &rarr;</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 12px;">Navigation</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+          <a href="#acoustics" style="color: rgba(255,255,255,0.85); text-decoration: none;">Acoustic Architecture</a>
+          <a href="#studies" style="color: rgba(255,255,255,0.85); text-decoration: none;">Localization Studies</a>
+          <a href="#manifest" style="color: rgba(255,255,255,0.85); text-decoration: none;">Audio &amp; Agent Index</a>
+          <a href="#tokens" style="color: rgba(255,255,255,0.85); text-decoration: none;">Brand Tokens &amp; Specimen</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 12px;">Hackathon Credentials</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.85);">
+          <div>Alexa+ Primary Track</div>
+          <div>AWS Builder Challenge</div>
+          <div>Bedrock Claude 3.5 Sonnet</div>
+          <div>Amazon Nova Pro</div>
+        </div>
+      </div>
+    </div>
+    <div class="exo-footer-bottom">
+      <div>&copy; 2026 DubPilot — Amazon Developer Hackathon 2026. All rights reserved.</div>
+      <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" style="color: rgba(255,255,255,0.5); text-decoration: none;">Return to Top &uarr;</a>
+    </div>
+  </footer>
+
+</body>
+</html>

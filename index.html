@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DubPilot — Alexa+ Multimodal Studio & AWS Bedrock Copilot</title>
+  <meta name="description" content="Conversational AI for multilingual video dubbing, synchronized subtitles, and interactive playback on Alexa+ and AWS Bedrock.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2300CAEC'/><polygon points='40,30 70,50 40,70' fill='%23FFFFFF'/></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="header">
+    <div class="brand-wrapper">
+      <div class="logo-badge" aria-label="DubPilot Logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+      </div>
+      <div class="brand-title-group">
+        <h1>DubPilot <span class="hackathon-tag">Amazon 2026</span></h1>
+      </div>
+    </div>
+
+    <div class="header-badges">
+      <div class="track-badge active-track">
+        <span class="pulse-dot"></span>
+        <span>Alexa+ Primary Track</span>
+      </div>
+      <div class="track-badge aws-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+        </svg>
+        <span id="bedrockModeBadge">Bedrock Claude 3.5</span>
+      </div>
+      <a href="showcase.html" class="settings-btn" style="text-decoration: none; background: rgba(230, 215, 202, 0.15); border-color: rgba(224, 204, 187, 0.4);" title="DubPilot — Multimodal Cinema Monograph & Architecture">
+        <span style="font-size: 13px; color: #e6d7ca;">Brand Monograph &rarr;</span>
+      </a>
+      <button class="settings-btn" id="settingsBtn" aria-label="Open Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>AWS Setup</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Container -->
+  <main class="main-container">
+
+    <!-- Left Stage: Video Player & Multitrack Controls -->
+    <section class="video-stage-card">
+      <div class="card-header-bar">
+        <div class="card-title-group">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--alexa-blue)" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+              <line x1="7" y1="2" x2="7" y2="22"></line>
+              <line x1="17" y1="2" x2="17" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="2" y1="7" x2="7" y2="7"></line>
+              <line x1="2" y1="17" x2="7" y2="17"></line>
+              <line x1="17" y1="17" x2="22" y2="17"></line>
+              <line x1="17" y1="7" x2="22" y2="7"></line>
+            </svg>
+            Multimodal Cinema Viewport
+          </h2>
+          <p>Real-time multilingual dubbed playback with synchronized speech & captions</p>
+        </div>
+
+        <!-- Manual Language Chips -->
+        <div class="lang-selector-group" id="langSelectorGroup">
+          <button class="lang-chip active" data-lang="en">English (Orig)</button>
+          <button class="lang-chip" data-lang="es">Español</button>
+          <button class="lang-chip" data-lang="hi">हिन्दी</button>
+          <button class="lang-chip" data-lang="fr">Français</button>
+        </div>
+      </div>
+
+      <!-- Video Viewport Frame -->
+      <div class="video-viewport" id="videoViewport">
+        <video id="mainVideo" src="media/video.mp4" playsinline preload="auto"></video>
+        
+        <!-- Live Subtitle HUD Overlay -->
+        <div class="subtitle-hud" id="subtitleHud">
+          <span class="subtitle-text" id="subtitleText">Este ganador antrópico del hackathon acaba de publicar toda su configuración de código...</span>
+          <span class="subtitle-bilingual" id="subtitleBilingual" style="display: none;"></span>
+        </div>
+      </div>
+
+      <!-- Player Controls Bar -->
+      <div class="player-controls-bar">
+        <button class="control-btn" id="playPauseBtn" title="Play / Pause">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </button>
+
+        <div class="timeline-slider-wrapper">
+          <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="100" step="0.1" value="0">
+        </div>
+
+        <span class="time-stamp-display" id="timestampDisplay">00:00 / 00:00</span>
+
+        <input type="range" id="masterVolume" min="0" max="1" step="0.05" value="1" style="width: 70px;" title="Master Volume">
+      </div>
+
+      <!-- Multitrack Stem Audio Mixer Strip -->
+      <div class="audio-mixer-strip">
+        <div class="stem-channel">
+          <div class="stem-label-row">
+            <span>Dialogue Bus</span>
+            <span id="dialogueValDisplay">1.0x</span>
+          </div>
+          <input type="range" class="stem-slider" id="dialogueStemVolume" min="0" max="1.5" step="0.05" value="1.0">
+        </div>
+
+        <div class="stem-channel">
+          <div class="stem-label-row">
+            <span>Music & Effects (M&E)</span>
+            <span id="bgValDisplay">0.8x</span>
+          </div>
+          <input type="range" class="stem-slider" id="bgStemVolume" min="0" max="1" step="0.05" value="0.8">
+        </div>
+
+        <div class="stem-channel">
+          <div class="stem-label-row">
+            <span>Sidechain Ducking</span>
+            <span style="color: var(--mint-accent);">-6 dB</span>
+          </div>
+          <input type="range" class="stem-slider" id="duckingFactor" min="-18" max="0" step="1" value="-6" disabled>
+        </div>
+      </div>
+
+      <!-- Interactive Dialogue Script Transcript -->
+      <div class="transcript-card">
+        <div class="transcript-header">
+          <span>Interactive Script Transcript (Click line to jump)</span>
+          <span style="font-size: 0.72rem; color: var(--alexa-blue);">Faster-Whisper Checkpoint</span>
+        </div>
+        <div class="transcript-scroll-area" id="transcriptList">
+          <!-- Populated dynamically via VTT parser -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Stage: Alexa+ Multimodal Copilot -->
+    <section class="alexa-copilot-card">
+      <div class="alexa-presence-wrapper">
+        <div class="alexa-orb-container" id="alexaOrbContainer" title="Click to talk to Alexa+">
+          <div class="alexa-ring-animation"></div>
+          <div class="alexa-orb">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+              <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="orb-status-text" id="orbStatus">Tap orb or say "Alexa..."</div>
+      </div>
+
+      <!-- Quick Conversational Prompt Chips -->
+      <div class="quick-prompt-ribbon">
+        <button class="prompt-chip" data-prompt="Switch to Hindi audio">🗣️ Switch to Hindi</button>
+        <button class="prompt-chip" data-prompt="Cambiar a Español">🇪🇸 Cambiar a Español</button>
+        <button class="prompt-chip" data-prompt="Replay that last line">⏪ Replay last line</button>
+        <button class="prompt-chip" data-prompt="Make the subtitles larger">🔤 Make subtitles larger</button>
+        <button class="prompt-chip" data-prompt="Duck background music by 6dB">🎚️ Duck background music</button>
+        <button class="prompt-chip" data-prompt="Who is Afan Mustafa in this video?">💡 Who is in this clip?</button>
+      </div>
+
+      <!-- Real-Time Conversation & Telemetry Feed -->
+      <div class="conversation-feed" id="conversationFeed">
+        <div class="message-bubble alexa">
+          <div class="message-meta">Alexa+ · Amazon Bedrock · Ready</div>
+          <div>Hello! I'm your Multimodal Localization Copilot. You can speak to me or type commands to switch dubbing languages, control subtitles, replay lines, or ask about the video.</div>
+        </div>
+      </div>
+
+      <!-- Chat Input Bar -->
+      <div class="chat-input-bar">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Ask Alexa+ (e.g. 'Switch to Spanish audio', 'Make subtitles bigger')...">
+        <button class="mic-toggle-btn" id="micToggleBtn" title="Speak to Alexa+">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
+        <button class="control-btn" id="sendBtn" style="background: var(--violet-primary); border-radius: var(--radius-md); width: 42px; height: 42px;" title="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="2 21 23 12 2 3 2 10 17 12 2 14 2 21"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Judging Rubric Alignment Strip -->
+  <section class="footer-rubric-strip">
+    <div class="rubric-grid">
+      <div class="rubric-card">
+        <span class="weight-tag">Technical (25%)</span>
+        <h3>Bedrock Tool Calling</h3>
+        <p>Live structured tool invocation, gapless audio stem switching, and VTT synchronization.</p>
+      </div>
+      <div class="rubric-card">
+        <span class="weight-tag">Design (25%)</span>
+        <h3>Multimodal UI/UX</h3>
+        <p>Glassmorphic cinema dark mode, reactive voice visualizer orb, WCAG AA compliance.</p>
+      </div>
+      <div class="rubric-card">
+        <span class="weight-tag">Impact (25%)</span>
+        <h3>Global Multilingual Video</h3>
+        <p>Breaking language barriers for 1.5B+ viewers across Hindi, Spanish, French, and English.</p>
+      </div>
+      <div class="rubric-card">
+        <span class="weight-tag">Bonus (+10%)</span>
+        <h3>Developer Friction Log</h3>
+        <p>Documented Bedrock Converse streaming deltas & edge latency mitigations in friction_log.md.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings Modal (AWS Bedrock Credentials / Proxy) -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="settings-modal">
+      <div class="modal-header">
+        <h2>AWS Bedrock & Agent Configuration</h2>
+        <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+      </div>
+
+      <div class="setting-group">
+        <label for="bedrockModelSelect">Bedrock Foundation Model</label>
+        <select class="setting-input" id="bedrockModelSelect">
+          <option value="anthropic.claude-3-5-sonnet-20241022-v2:0" selected>Anthropic Claude 3.5 Sonnet v2 (Recommended)</option>
+          <option value="amazon.nova-pro-v1:0">Amazon Nova Pro</option>
+          <option value="amazon.titan-text-express-v1">Amazon Titan Text Express</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" id="toggleProxy">
+          <span>Enable Live AWS Bedrock Proxy Server (localhost:3001)</span>
+        </label>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+          When unchecked, DubPilot uses its deterministic client-side Bedrock simulation runtime for 100% offline demo reliability.
+        </p>
+      </div>
+
+      <div class="setting-group">
+        <label for="awsRegion">AWS Region</label>
+        <input type="text" class="setting-input" id="awsRegion" value="us-east-1" placeholder="us-east-1">
+      </div>
+
+      <button class="control-btn" id="saveSettingsBtn" style="background: var(--alexa-blue); color: #000; font-weight: 700; width: 100%; height: 38px; border-radius: var(--radius-sm); margin-top: 8px;">
+        Save & Apply Configuration
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/bedrockService.js"></script>
+  <script src="js/videoPlayer.js"></script>
+  <script src="js/alexaAgent.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
